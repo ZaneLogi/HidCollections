@@ -1146,6 +1146,25 @@ RoutineDescription:
     return status;
 }
 
+bool CHidDevice::Write(PUCHAR pData, ULONG ulSize)
+{
+    DWORD  bytesWritten;
+    bool writeStatus = WriteFile(
+        HidDevice,
+        pData,
+        ulSize,
+        &bytesWritten,
+        NULL)
+        && (bytesWritten == ulSize);
+
+    DWORD err = GetLastError();
+
+    // ERROR_INVALID_FUNCTION: 1
+    ERROR_SUCCESS; // 0
+
+    return writeStatus;
+}
+
 bool CHidDevice::SetFeature()
 /*++
 RoutineDescription:

@@ -49,6 +49,6 @@ protected:
     afx_msg LRESULT OnDisplayData(WPARAM wParam = 0, LPARAM lParam = 0);
     afx_msg LRESULT OnReadDone(WPARAM wParam = 0, LPARAM lParam = 0);
 
-public:    
+public:
     CListBox m_lbOutput;
 };

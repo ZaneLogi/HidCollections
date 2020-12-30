@@ -7,7 +7,6 @@
 #include "afxwin.h"
 
 #include "DynObj.h"
-
 #include "HidDevice.h"
 
 typedef struct _ATTR_FORMAT
@@ -59,6 +58,7 @@ protected:
     afx_msg void OnBnClickedBtnRead();
     afx_msg void OnBnClickedBtnFeature();
     afx_msg void OnBnClickedBtnWrite();
+    afx_msg void OnBnClickedBtnReadWrite();
 
     afx_msg BOOL OnDeviceChange(UINT nEventType,DWORD_PTR dwData);
 
@@ -71,10 +71,9 @@ protected:
     void PopulateValueAttributes(PHIDP_VALUE_CAPS pValueCaps);
 
 public:
-    CComboBox    m_cbDeviceList;
-    CComboBox    m_cbItemType;
+    CComboBox   m_cbDeviceList;
+    CComboBox   m_cbItemType;
     CListBox    m_lbItems;
     CListBox    m_lbItemAttrs;
-
 
 };

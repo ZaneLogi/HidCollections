@@ -8,6 +8,7 @@
 #include "FeatureDlg.h"
 #include "ReadDataDlg.h"
 #include "GetDataDlg.h"
+#include "ReadWriteDlg.h"
 #include "afxdialogex.h"
 
 #include <dbt.h>
@@ -91,6 +92,8 @@ public:
 // Implementation
 protected:
     DECLARE_MESSAGE_MAP()
+public:
+    afx_msg void OnBnClickedBtnSend();
 };
 
 CAboutDlg::CAboutDlg() : CDialogEx(CAboutDlg::IDD)
@@ -103,6 +106,7 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
+    ON_BN_CLICKED(IDC_BTN_SEND, &CAboutDlg::OnBnClickedBtnSend)
 END_MESSAGE_MAP()
 
 
@@ -142,6 +146,7 @@ BEGIN_MESSAGE_MAP(CHidCollectionsDlg, CDialogEx)
     ON_BN_CLICKED(IDC_BTN_READ, &CHidCollectionsDlg::OnBnClickedBtnRead)
     ON_BN_CLICKED(IDC_BTN_FEATURE, &CHidCollectionsDlg::OnBnClickedBtnFeature)
     ON_BN_CLICKED(IDC_BTN_WRITE, &CHidCollectionsDlg::OnBnClickedBtnWrite)
+    ON_BN_CLICKED(IDC_BTN_READ_WRITE, &CHidCollectionsDlg::OnBnClickedBtnReadWrite)
 END_MESSAGE_MAP()
 
 
@@ -187,6 +192,7 @@ BOOL CHidCollectionsDlg::OnInitDialog()
     OBJ_DEFINE_BOTTOM_LEFT(IDC_BTN_FEATURE);
     OBJ_DEFINE_BOTTOM_LEFT(IDC_BTN_READ);
     OBJ_DEFINE_BOTTOM_LEFT(IDC_BTN_WRITE);
+    OBJ_DEFINE_BOTTOM_RIGHT(IDC_BTN_READ_WRITE);
     OBJ_DEFINE_BOTTOM_RIGHT(IDOK);
     END_OBJ_MAP();
 
@@ -967,4 +973,25 @@ void CHidCollectionsDlg::OnBnClickedBtnWrite()
 
         writeDevice.Close();
     }
+}
+
+
+void CHidCollectionsDlg::OnBnClickedBtnReadWrite()
+{
+    int nDevIdx = m_cbDeviceList.GetCurSel();
+    if (nDevIdx == CB_ERR)
+        return;
+
+    CHidDevice* pHidDevice = (CHidDevice*)m_cbDeviceList.GetItemData(nDevIdx);
+    if (pHidDevice == NULL)
+        return;
+
+    CReadWriteDlg dlg(pHidDevice);
+    dlg.DoModal();
+}
+
+
+void CAboutDlg::OnBnClickedBtnSend()
+{
+    // TODO: Add your control notification handler code here
 }

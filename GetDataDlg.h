@@ -32,7 +32,7 @@ protected:
     virtual BOOL OnInitDialog();
 
 public:
-    
+
     CEditListCtrl m_lcFeatures;
     CHexEdit m_ecData;
 };

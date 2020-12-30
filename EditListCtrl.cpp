@@ -93,7 +93,7 @@ void CInPlaceEditBox::OnKillFocus(CWnd* pNewWnd)
     dispinfo.item.cchTextMax = str.GetLength();
     dispinfo.item.lParam = 0;
 
-    GetParent()->GetParent()->SendMessage( WM_NOTIFY, GetParent()->GetDlgCtrlID(), 
+    GetParent()->GetParent()->SendMessage( WM_NOTIFY, GetParent()->GetDlgCtrlID(),
                     (LPARAM)&dispinfo );
 
     DestroyWindow();
@@ -171,7 +171,7 @@ int CInPlaceEditBox::OnCreate(LPCREATESTRUCT lpCreateStruct)
     return 0;
 }
 
-void CInPlaceEditBox::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) 
+void CInPlaceEditBox::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
     CEdit::OnKeyDown(nChar, nRepCnt, nFlags);
 }
@@ -200,11 +200,11 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CInPlaceHexEditBox message handlers
 
-int CInPlaceHexEditBox::OnCreate(LPCREATESTRUCT lpCreateStruct) 
+int CInPlaceHexEditBox::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
     if (CInPlaceEditBox::OnCreate(lpCreateStruct) == -1)
         return -1;
-    
+
     if ( m_sInitText.GetLength() > m_nDigitCount ) {
         m_sInitText = m_sInitText.Left(m_nDigitCount);
     }
@@ -218,7 +218,7 @@ int CInPlaceHexEditBox::OnCreate(LPCREATESTRUCT lpCreateStruct)
         s.ReleaseBuffer();
         m_sInitText = s;
     }
-    
+
     m_sInitText.MakeUpper();
     SetWindowText( m_sInitText );
     SetFocus();
@@ -228,7 +228,7 @@ int CInPlaceHexEditBox::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 }
 
-void CInPlaceHexEditBox::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags) 
+void CInPlaceHexEditBox::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
     UNREFERENCED_PARAMETER(nFlags);
     UNREFERENCED_PARAMETER(nRepCnt);
@@ -258,7 +258,7 @@ void CInPlaceHexEditBox::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
             SetSel(s,s+1);
             ReplaceSel(strText);
         }
-        
+
         ResizeToFit();
     }
     else if ( nChar == VK_BACK ) {
@@ -276,7 +276,7 @@ void CInPlaceHexEditBox::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
     }
 }
 
-void CInPlaceHexEditBox::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) 
+void CInPlaceHexEditBox::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
     int s,e;
     GetSel(s,e);
@@ -328,11 +328,11 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CInPlaceComboBox message handlers
 
-int CInPlaceComboBox::OnCreate(LPCREATESTRUCT lpCreateStruct) 
+int CInPlaceComboBox::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
     if (CComboBox::OnCreate(lpCreateStruct) == -1)
         return -1;
-    
+
     // Set the proper font
     CFont* font = GetParent()->GetFont();
     SetFont(font);
@@ -346,7 +346,7 @@ int CInPlaceComboBox::OnCreate(LPCREATESTRUCT lpCreateStruct)
     return 0;
 }
 
-BOOL CInPlaceComboBox::PreTranslateMessage(MSG* pMsg) 
+BOOL CInPlaceComboBox::PreTranslateMessage(MSG* pMsg)
 {
     if( pMsg->message == WM_KEYDOWN )
     {
@@ -358,14 +358,14 @@ BOOL CInPlaceComboBox::PreTranslateMessage(MSG* pMsg)
             return TRUE;                // DO NOT process further
         }
     }
-    
+
     return CComboBox::PreTranslateMessage(pMsg);
 }
 
-void CInPlaceComboBox::OnKillFocus(CWnd* pNewWnd) 
+void CInPlaceComboBox::OnKillFocus(CWnd* pNewWnd)
 {
     CComboBox::OnKillFocus(pNewWnd);
-    
+
     CString str;
     GetWindowText(str);
 
@@ -387,7 +387,7 @@ void CInPlaceComboBox::OnKillFocus(CWnd* pNewWnd)
     PostMessage( WM_CLOSE );
 }
 
-void CInPlaceComboBox::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags) 
+void CInPlaceComboBox::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
     if( nChar == VK_ESCAPE || nChar == VK_RETURN)
     {
@@ -396,18 +396,18 @@ void CInPlaceComboBox::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
         GetParent()->SetFocus();
         return;
     }
-    
+
     CComboBox::OnChar(nChar, nRepCnt, nFlags);
 }
 
-void CInPlaceComboBox::OnNcDestroy() 
+void CInPlaceComboBox::OnNcDestroy()
 {
     CComboBox::OnNcDestroy();
-    
+
     delete this;
 }
 
-void CInPlaceComboBox::OnCloseup() 
+void CInPlaceComboBox::OnCloseup()
 {
     GetParent()->SetFocus();
 }
@@ -595,7 +595,7 @@ void CEditListCtrl::EditSubLabel(int nItem, int nCol)
     case CT_COMBOBOX:
         {
             rect.bottom += (rect.bottom-rect.top)*25;
-        
+
             DWORD dwStyle = WS_BORDER|WS_CHILD|WS_VISIBLE|WS_VSCROLL//|WS_HSCROLL
                 |CBS_DROPDOWNLIST|CBS_DISABLENOSCROLL;
             CComboBox *pList = new CInPlaceComboBox(nItem, nCol, GetItemText( nItem, nCol ), pcd->astrComboItem );
@@ -621,13 +621,13 @@ void CEditListCtrl::EditSubLabel(int nItem, int nCol)
     }
 }
 
-void CEditListCtrl::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar) 
+void CEditListCtrl::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 {
     if( GetFocus() != this ) SetFocus();
     CListCtrl::OnHScroll(nSBCode, nPos, pScrollBar);
 }
 
-void CEditListCtrl::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar) 
+void CEditListCtrl::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 {
     if( GetFocus() != this ) SetFocus();
     CListCtrl::OnVScroll(nSBCode, nPos, pScrollBar);
@@ -638,10 +638,10 @@ void CEditListCtrl::OnBeginLabelEdit(NMHDR* pNMHDR, LRESULT* pResult)
     LV_DISPINFO* plvDispInfo = (LV_DISPINFO*)pNMHDR;
     LV_ITEM *plvItem = &plvDispInfo->item;
     if ( plvItem->iSubItem >= 0 ) *pResult = TRUE;
-    else *pResult = 0; 
+    else *pResult = 0;
 }
 
-void CEditListCtrl::OnEndLabelEdit(NMHDR* pNMHDR, LRESULT* pResult) 
+void CEditListCtrl::OnEndLabelEdit(NMHDR* pNMHDR, LRESULT* pResult)
 {
     LV_DISPINFO *plvDispInfo = (LV_DISPINFO *)pNMHDR;
     LV_ITEM    *plvItem = &plvDispInfo->item;
@@ -665,7 +665,7 @@ void CEditListCtrl::OnEndLabelEdit(NMHDR* pNMHDR, LRESULT* pResult)
     }
 }
 
-void CEditListCtrl::OnLButtonDown(UINT nFlags, CPoint point) 
+void CEditListCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 {
     CListCtrl::OnLButtonDown(nFlags, point);
 
@@ -866,7 +866,7 @@ void CEditListCtrl::OnBeginDrag( NMHDR* pNMHDR, LRESULT* pResult )
 
     // ask app if it allows to move
     if ( 1 != GetParent()->SendMessage(UD_LC_QUERY_ROW_MOVE,pnmv->iItem,(LPARAM)this) )
-        return;    
+        return;
 
     SetFocus(); // when in-place control exists, this will close it
 
@@ -895,7 +895,7 @@ void CEditListCtrl::OnBeginDrag( NMHDR* pNMHDR, LRESULT* pResult )
     SetCapture();
 }
 
-void CEditListCtrl::OnMouseMove(UINT nFlags, CPoint point) 
+void CEditListCtrl::OnMouseMove(UINT nFlags, CPoint point)
 {
     CListCtrl::OnMouseMove(nFlags,point);
 
@@ -938,7 +938,7 @@ void CEditListCtrl::OnMouseMove(UINT nFlags, CPoint point)
             UpdateWindow();
         }
 
-        m_nDropIndex = nNewDropIndex;        
+        m_nDropIndex = nNewDropIndex;
         if ( m_nDropIndex < 0 )
             SetCursor(LoadCursor(NULL,IDC_NO));
         else
@@ -949,7 +949,7 @@ void CEditListCtrl::OnMouseMove(UINT nFlags, CPoint point)
     }
 }
 
-void CEditListCtrl::OnLButtonUp(UINT nFlags, CPoint point) 
+void CEditListCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 {
     CListCtrl::OnLButtonUp(nFlags,point);
 
@@ -1029,7 +1029,7 @@ bool CEditListCtrl::DropItemOnList()
     return true;
 }
 
-void CEditListCtrl::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) 
+void CEditListCtrl::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
     DWORD dwStyle = GetStyle();
     if ( !(dwStyle & LVS_REPORT) || !(dwStyle & LVS_EDITLABELS) )
@@ -1272,7 +1272,7 @@ int CEditListCtrl::InsertColumn( const COLUMNINIT columns[], int nCount )
         switch ( columns[i].ct ) {
             case CT_NONE:
                 InsertColumn( columns[i].nCol, achBuf,
-                    columns[i].nWidth, columns[i].color1, columns[i].color2 ); 
+                    columns[i].nWidth, columns[i].color1, columns[i].color2 );
                 break;
             case CT_EDITBOX:
                 InsertEditBoxColumn( columns[i].nCol, achBuf,
@@ -1288,7 +1288,7 @@ int CEditListCtrl::InsertColumn( const COLUMNINIT columns[], int nCount )
             case CT_PROGRESSBAR:
                 InsertProgressBarColumn(  columns[i].nCol, achBuf,
                     columns[i].nWidth, columns[i].color1, columns[i].color2 );
-            case CT_CHECKBOX: 
+            case CT_CHECKBOX:
                 InsertCheckBoxColumn( columns[i].nCol, achBuf,
                     columns[i].nWidth, columns[i].color1 );
             default:
@@ -1456,7 +1456,7 @@ int    CEditListCtrl::GetIndexInComboBoxColumn( int nCol, LPCTSTR lpszText )
 
     if ( pcd->ct != CT_COMBOBOX )
         return CB_ERR;
-    
+
     for ( int i = 0; i < pcd->astrComboItem.GetSize(); i++ ) {
         if ( pcd->astrComboItem[i] == lpszText )
             return i;
@@ -1478,7 +1478,7 @@ int    CEditListCtrl::SetCheckInCheckBoxColumn( int nItem, int nCol, int nCheck 
 
     if ( pcd->ct != CT_CHECKBOX )
         return -1;
-    
+
     switch ( nCheck ) {
     case 0:
         SetItemText(nItem,nCol,_T(" "));
@@ -1582,15 +1582,15 @@ CImageList* CEditListCtrl::CreateDragImageEx(LPPOINT lpPoint)
     if (nBottomIndex > (GetItemCount() - 1))
         nBottomIndex = GetItemCount() - 1;
 
-    // Determine the size of the drag image (limite for 
+    // Determine the size of the drag image (limite for
     // rows visibled and Client width)
     while ((nIndex = GetNextItem(nIndex, LVNI_SELECTED)) != -1) {
         if (nIndex > nBottomIndex)
-            break; 
+            break;
 
         GetItemRect(nIndex, rectSingle, LVIR_BOUNDS);
 
-        if (rectSingle.left < 0) 
+        if (rectSingle.left < 0)
             rectSingle.left = 0;
 
         if (rectSingle.right > nWidth)
@@ -1606,21 +1606,21 @@ CImageList* CEditListCtrl::CreateDragImageEx(LPPOINT lpPoint)
     if (!dcMem.CreateCompatibleDC(&dcClient))
         return NULL;
 
-    if (!Bitmap.CreateCompatibleBitmap(&dcClient, 
-        rectComplete.Width(), 
+    if (!Bitmap.CreateCompatibleBitmap(&dcClient,
+        rectComplete.Width(),
         rectComplete.Height()))
         return NULL;
 
     CBitmap *pOldMemDCBitmap = dcMem.SelectObject(&Bitmap);
     // Use green as mask color
-    dcMem.FillSolidRect(0, 0, 
-        rectComplete.Width(), 
-        rectComplete.Height(), 
+    dcMem.FillSolidRect(0, 0,
+        rectComplete.Width(),
+        rectComplete.Height(),
         RGB(0,255,0));
 
     // Paint each DragImage in the DC
     nIndex = GetTopIndex() - 1;
-    while ((nIndex = GetNextItem(nIndex, LVNI_SELECTED)) != -1) {   
+    while ((nIndex = GetNextItem(nIndex, LVNI_SELECTED)) != -1) {
         if (nIndex > nBottomIndex)
             break;
 
@@ -1630,9 +1630,9 @@ CImageList* CEditListCtrl::CreateDragImageEx(LPPOINT lpPoint)
         if (pSingleImageList) {
             GetItemRect(nIndex, rectSingle, LVIR_BOUNDS);
 
-            pSingleImageList->Draw(&dcMem, 0, 
+            pSingleImageList->Draw(&dcMem, 0,
                 CPoint(rectSingle.left - rectComplete.left,
-                rectSingle.top - rectComplete.top), 
+                rectSingle.top - rectComplete.top),
                 ILD_MASK);
 
             pSingleImageList->DeleteImageList();
@@ -1642,13 +1642,13 @@ CImageList* CEditListCtrl::CreateDragImageEx(LPPOINT lpPoint)
 
     dcMem.SelectObject(pOldMemDCBitmap);
     CImageList* pCompleteImageList = new CImageList;
-    pCompleteImageList->Create(rectComplete.Width(), 
-        rectComplete.Height(), 
-        ILC_COLOR | ILC_MASK, 
+    pCompleteImageList->Create(rectComplete.Width(),
+        rectComplete.Height(),
+        ILC_COLOR | ILC_MASK,
         0, 1);
-    
+
     // Green is used as mask color
-    pCompleteImageList->Add(&Bitmap, RGB(0, 255, 0)); 
+    pCompleteImageList->Add(&Bitmap, RGB(0, 255, 0));
     Bitmap.DeleteObject();
 
     if (lpPoint) {

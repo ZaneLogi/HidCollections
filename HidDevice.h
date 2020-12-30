@@ -78,9 +78,8 @@ public:
     CHidDevice(void);
     ~CHidDevice(void);
 
-    // decalre but not define to prevent 'copy' operation.
-    CHidDevice( const CHidDevice& x );
-    CHidDevice& operator = ( const CHidDevice& x );
+    CHidDevice(const CHidDevice&) = delete;
+    CHidDevice& operator = (const CHidDevice&) = delete;
 
     bool Open(
         LPCTSTR devicePath,
@@ -94,6 +93,7 @@ public:
     bool Read();
     bool ReadOverlapped(HANDLE hCompletionEvent);
     bool Write();
+    bool Write(PUCHAR pData, ULONG ulSize);
     bool SetFeature();
     bool GetFeature();
 
