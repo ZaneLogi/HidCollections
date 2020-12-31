@@ -8,7 +8,6 @@
 #include "FeatureDlg.h"
 #include "ReadDataDlg.h"
 #include "GetDataDlg.h"
-#include "ReadWriteDlg.h"
 #include "afxdialogex.h"
 
 #include <dbt.h>
@@ -92,8 +91,6 @@ public:
 // Implementation
 protected:
     DECLARE_MESSAGE_MAP()
-public:
-    afx_msg void OnBnClickedBtnSend();
 };
 
 CAboutDlg::CAboutDlg() : CDialogEx(CAboutDlg::IDD)
@@ -106,7 +103,6 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
-    ON_BN_CLICKED(IDC_BTN_SEND, &CAboutDlg::OnBnClickedBtnSend)
 END_MESSAGE_MAP()
 
 
@@ -383,7 +379,7 @@ BOOL CALLBACK CHidCollectionsDlg::EnumDeviceProc(LPCTSTR pszDevName, LPCTSTR psz
 {
     CHidCollectionsDlg* pDlg = (CHidCollectionsDlg*)pContext;
 
-    CHidDevice* pHidDevice = new CHidDevice();
+    CHidDevice* pHidDevice = new CHidDevice(pszDevName);
     if ( pHidDevice ) {
         if (pHidDevice->Open(pszDevPath, FALSE, FALSE, FALSE, FALSE)) {
             CString strItem;
@@ -690,6 +686,13 @@ void CHidCollectionsDlg::OnBnClickedCancel()
         }
     }
 
+    for (auto itr = m_dlgList.begin(); itr != m_dlgList.end(); ++itr)
+    {
+        itr->second->DestroyWindow();
+        // let the system handle the cleanup of the work thread owned by the dialog
+        // memory release will be in WM_NCDESTROY
+    }
+
     if ( m_hDevNotify )
     {
         UnregisterDeviceNotification(m_hDevNotify);
@@ -986,12 +989,34 @@ void CHidCollectionsDlg::OnBnClickedBtnReadWrite()
     if (pHidDevice == NULL)
         return;
 
+#if 1
+    // modeless dialog
+    auto itr = m_dlgList.find(pHidDevice);
+    if (itr != m_dlgList.end())
+    {
+        itr->second->ShowWindow(SW_SHOW);
+        itr->second->SetForegroundWindow();
+    }
+    else
+    {
+        CReadWriteDlg* pDlg = new CReadWriteDlg(pHidDevice, true);
+        ASSERT(pDlg);
+        if (pDlg->Create(IDD_READ_WRITE, this))
+        {
+            pDlg->ShowWindow(SW_SHOWNORMAL);
+            m_dlgList[pHidDevice] = pDlg;
+        }
+        else
+            delete pDlg;
+    }
+#endif
+
+
+#if 0
+    // modle dialog
     CReadWriteDlg dlg(pHidDevice);
     dlg.DoModal();
+#endif
 }
 
 
-void CAboutDlg::OnBnClickedBtnSend()
-{
-    // TODO: Add your control notification handler code here
-}

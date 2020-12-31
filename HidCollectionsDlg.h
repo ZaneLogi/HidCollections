@@ -8,6 +8,9 @@
 
 #include "DynObj.h"
 #include "HidDevice.h"
+#include "ReadWriteDlg.h"
+
+#include <map>
 
 typedef struct _ATTR_FORMAT
 {
@@ -70,10 +73,11 @@ protected:
     void PopulateButtonAttributes(PHIDP_BUTTON_CAPS pCaps);
     void PopulateValueAttributes(PHIDP_VALUE_CAPS pValueCaps);
 
-public:
+private:
     CComboBox   m_cbDeviceList;
     CComboBox   m_cbItemType;
     CListBox    m_lbItems;
     CListBox    m_lbItemAttrs;
 
+    std::map<CHidDevice*, CReadWriteDlg*> m_dlgList;
 };

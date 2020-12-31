@@ -14,10 +14,11 @@
 
 IMPLEMENT_DYNAMIC(CReadWriteDlg, CDialogEx)
 
-CReadWriteDlg::CReadWriteDlg(CHidDevice* pHidDevice, CWnd* pParent /*=nullptr*/)
+CReadWriteDlg::CReadWriteDlg(CHidDevice* pHidDevice, bool modeless, CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_READ_WRITE, pParent)
 {
 	m_pHidDevice = pHidDevice;
+    m_bModeless = modeless;
 	m_readThread = NULL;
 	m_displayEvent = NULL;
 	m_bTerminateThread = false;
@@ -36,13 +37,15 @@ void CReadWriteDlg::DoDataExchange(CDataExchange* pDX)
 
 
 BEGIN_MESSAGE_MAP(CReadWriteDlg, CDialogEx)
-	ON_WM_MOVE()
-	ON_WM_SIZE()
-	ON_WM_GETMINMAXINFO()
+    ON_WM_MOVE()
+    ON_WM_SIZE()
+    ON_WM_GETMINMAXINFO()
     ON_MESSAGE(WM_READ_DONE, &CReadWriteDlg::OnReadDone)
     ON_MESSAGE(WM_DISPLAY_READ_DATA, &CReadWriteDlg::OnDisplayData)
-	ON_BN_CLICKED(IDOK, &CReadWriteDlg::OnBnClickedOk)
+    ON_BN_CLICKED(IDOK, &CReadWriteDlg::OnBnClickedOk)
+    ON_BN_CLICKED(IDCANCEL, &CReadWriteDlg::OnBnClickedCancel)
 	ON_BN_CLICKED(IDC_BTN_SEND, &CReadWriteDlg::OnBnClickedBtnSend)
+    ON_WM_NCDESTROY()
 END_MESSAGE_MAP()
 
 
@@ -79,6 +82,14 @@ BOOL CReadWriteDlg::OnInitDialog()
 
 	m_ecOutput.SetFont(&m_editFont);
 	m_ecWriteData.SetFont(&m_editFont);
+
+    CString strItem;
+    strItem.Format(_T("%s, Device %d, UsagePage 0%x, Usage 0%x"),
+        m_pHidDevice->DeviceName(),
+        HandleToULong(m_pHidDevice->HidDevice),
+        m_pHidDevice->Caps.UsagePage,
+        m_pHidDevice->Caps.Usage);
+    SetWindowText(strItem);
 
 	m_displayEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
 
@@ -120,6 +131,13 @@ void CReadWriteDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 void CReadWriteDlg::OnBnClickedOk()
 {
 	// TODO: Add your control notification handler code here
+    if (m_bModeless)
+    {
+        ShowWindow(SW_HIDE);
+        // let the parent window destroy this modeless dialog
+        return;
+    }
+
     m_bTerminateThread = true;
     WaitForSingleObject(m_readThread, INFINITE);
 
@@ -127,6 +145,11 @@ void CReadWriteDlg::OnBnClickedOk()
     m_asyncDevice.Close();
 
 	CDialogEx::OnOK();
+}
+
+void CReadWriteDlg::OnBnClickedCancel()
+{
+    OnBnClickedOk();
 }
 
 void CReadWriteDlg::OutputText(LPCTSTR format, ...)
@@ -322,4 +345,15 @@ AsyncRead_End:
     pDlg->PostMessage(WM_READ_DONE);
 
     return 0;
+}
+
+void CReadWriteDlg::OnNcDestroy()
+{
+    CDialogEx::OnNcDestroy();
+
+    // TODO: Add your message handler code here
+    if (m_bModeless)
+    {
+        delete this;
+    }
 }

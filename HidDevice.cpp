@@ -4,7 +4,7 @@
 #include <strsafe.h>
 #include <intsafe.h>
 
-CHidDevice::CHidDevice(void)
+CHidDevice::CHidDevice(LPCTSTR pszDevName)
 {
     DevicePath = NULL;
     HidDevice = INVALID_HANDLE_VALUE;
@@ -21,11 +21,18 @@ CHidDevice::CHidDevice(void)
     FeatureData = NULL;
     FeatureButtonCaps = NULL;
     FeatureValueCaps = NULL;
+
+    _tcscpy(m_DeviceName, pszDevName != nullptr ? pszDevName : _T("NONAME"));
 }
 
 CHidDevice::~CHidDevice(void)
 {
     Close();
+}
+
+LPCTSTR CHidDevice::DeviceName() const
+{
+    return m_DeviceName;
 }
 
 void CHidDevice::Close()

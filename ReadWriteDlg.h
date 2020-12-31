@@ -11,7 +11,7 @@ class CReadWriteDlg : public CDialogEx
 	DECLARE_DYNAMIC(CReadWriteDlg)
 
 public:
-	CReadWriteDlg(CHidDevice* pHidDevice, CWnd* pParent = nullptr);   // standard constructor
+	CReadWriteDlg(CHidDevice* pHidDevice, bool modeless = false, CWnd* pParent = nullptr);   // standard constructor
 	virtual ~CReadWriteDlg();
 
 // Dialog Data
@@ -25,8 +25,11 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 	afx_msg void OnBnClickedOk();
+	afx_msg void OnBnClickedCancel();
 	afx_msg LRESULT OnDisplayData(WPARAM wParam = 0, LPARAM lParam = 0);
 	afx_msg LRESULT OnReadDone(WPARAM wParam = 0, LPARAM lParam = 0);
+	afx_msg void OnBnClickedBtnSend();
+	afx_msg void OnNcDestroy();
 
 	DECLARE_OBJ_MAP();
 	afx_msg void OnMove(int, int);  // ON_WM_MOVE()
@@ -40,14 +43,15 @@ private:
 
 private:
 	CHidDevice* m_pHidDevice;
+	bool		m_bModeless;
+
 	HANDLE      m_readThread;
 	HANDLE      m_displayEvent;
 	CHidDevice  m_asyncDevice;
 	bool        m_bTerminateThread;
 
-	CFont m_editFont;
-	CEdit m_ecOutput;
-	CHexEdit m_ecWriteData;
-public:
-	afx_msg void OnBnClickedBtnSend();
+	CFont		m_editFont;
+	CEdit		m_ecOutput;
+	CHexEdit	m_ecWriteData;
+
 };

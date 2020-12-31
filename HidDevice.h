@@ -75,11 +75,13 @@ typedef struct _HID_DEVICE {
 class CHidDevice : public HID_DEVICE
 {
 public:
-    CHidDevice(void);
+    CHidDevice(LPCTSTR pszDevName = nullptr);
     ~CHidDevice(void);
 
     CHidDevice(const CHidDevice&) = delete;
     CHidDevice& operator = (const CHidDevice&) = delete;
+
+    LPCTSTR DeviceName() const;
 
     bool Open(
         LPCTSTR devicePath,
@@ -102,6 +104,9 @@ public:
 
 private:
     bool FillDeviceInfo();
+
+private:
+    TCHAR m_DeviceName[MAX_PATH];
 };
 
 //
